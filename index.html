@@ -1,0 +1,1521 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Expresiones Regulares en Java — KD-Electronics</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <meta name="theme-color" content="#0a0e1a" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #0a0e1a;
+        --surface: #111827;
+        --surface2: #1a2236;
+        --accent: #00d4ff;
+        --accent2: #7c3aed;
+        --accent3: #10b981;
+        --warn: #f59e0b;
+        --text: #e2e8f0;
+        --text-muted: #94a3b8;
+        --border: rgba(255, 255, 255, 0.07);
+        --code-bg: #0d1117;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: "Sora", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.75;
+        overflow-x: hidden;
+      }
+
+      /* ── HERO ── */
+      .hero {
+        position: relative;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 4rem 2rem;
+        overflow: hidden;
+      }
+
+      .hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(
+            ellipse 80% 60% at 50% 0%,
+            rgba(0, 212, 255, 0.12) 0%,
+            transparent 70%
+          ),
+          radial-gradient(
+            ellipse 60% 50% at 80% 80%,
+            rgba(124, 58, 237, 0.1) 0%,
+            transparent 60%
+          );
+      }
+
+      .hero-grid {
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(rgba(0, 212, 255, 0.04) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(0, 212, 255, 0.04) 1px, transparent 1px);
+        background-size: 48px 48px;
+      }
+
+      .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: rgba(0, 212, 255, 0.1);
+        border: 1px solid rgba(0, 212, 255, 0.3);
+        border-radius: 999px;
+        padding: 0.4rem 1.2rem;
+        font-size: 0.78rem;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin-bottom: 2rem;
+        position: relative;
+        animation: fadeDown 0.8s ease both;
+      }
+
+      .dot {
+        width: 8px;
+        height: 8px;
+        background: var(--accent);
+        border-radius: 50%;
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 0.5;
+          transform: scale(0.8);
+        }
+      }
+
+      .hero h1 {
+        font-size: clamp(2.4rem, 6vw, 5rem);
+        font-weight: 800;
+        line-height: 1.1;
+        letter-spacing: -0.02em;
+        position: relative;
+        animation: fadeDown 0.9s 0.1s ease both;
+      }
+
+      .hero h1 span {
+        background: linear-gradient(135deg, var(--accent), var(--accent2));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .hero-sub {
+        margin-top: 1.5rem;
+        font-size: 1.15rem;
+        color: var(--text-muted);
+        max-width: 600px;
+        position: relative;
+        animation: fadeDown 1s 0.2s ease both;
+      }
+
+      .hero-meta {
+        margin-top: 3rem;
+        display: flex;
+        gap: 2rem;
+        justify-content: center;
+        flex-wrap: wrap;
+        position: relative;
+        animation: fadeDown 1s 0.3s ease both;
+      }
+
+      .meta-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.25rem;
+      }
+
+      .meta-label {
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--text-muted);
+      }
+
+      .meta-value {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--accent);
+      }
+
+      @keyframes fadeDown {
+        from {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* ── NAV ── */
+      nav {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: rgba(10, 14, 26, 0.85);
+        backdrop-filter: blur(16px);
+        border-bottom: 1px solid var(--border);
+        padding: 0 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 2.5rem;
+        height: 56px;
+      }
+
+      nav a {
+        color: var(--text-muted);
+        text-decoration: none;
+        font-size: 0.82rem;
+        font-weight: 600;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        transition: color 0.2s;
+      }
+
+      nav a:hover {
+        color: var(--accent);
+      }
+
+      nav a.nav-github {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        border: 1px solid var(--border);
+        color: var(--text-muted);
+        transition:
+          color 0.2s,
+          border-color 0.2s,
+          transform 0.2s;
+      }
+
+      nav a.nav-github:hover {
+        color: var(--accent);
+        border-color: rgba(0, 212, 255, 0.4);
+        transform: translateY(-1px);
+      }
+
+      nav a.nav-github svg {
+        width: 16px;
+        height: 16px;
+        fill: currentColor;
+      }
+
+      /* ── LAYOUT ── */
+      .container {
+        max-width: 860px;
+        margin: 0 auto;
+        padding: 0 2rem;
+      }
+
+      section {
+        padding: 5rem 0;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .section-tag {
+        display: inline-block;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin-bottom: 1rem;
+      }
+
+      h2 {
+        font-size: clamp(1.6rem, 3vw, 2.2rem);
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        margin-bottom: 1.5rem;
+        line-height: 1.2;
+      }
+
+      h3 {
+        font-size: 1.15rem;
+        font-weight: 700;
+        margin-bottom: 0.75rem;
+        color: var(--text);
+      }
+
+      p {
+        color: var(--text-muted);
+        margin-bottom: 1.2rem;
+        font-size: 1rem;
+      }
+
+      /* ── CARDS ── */
+      .card-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.25rem;
+        margin-top: 2rem;
+      }
+
+      @media (max-width: 600px) {
+        .card-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 1.5rem;
+        transition:
+          border-color 0.25s,
+          transform 0.25s;
+      }
+
+      .card:hover {
+        border-color: rgba(0, 212, 255, 0.3);
+        transform: translateY(-3px);
+      }
+
+      .card-icon {
+        font-size: 1.8rem;
+        margin-bottom: 0.75rem;
+      }
+
+      .card h3 {
+        font-size: 0.95rem;
+        margin-bottom: 0.4rem;
+      }
+
+      .card p {
+        font-size: 0.88rem;
+        margin: 0;
+      }
+
+      /* ── TABLE ── */
+      .table-wrap {
+        overflow-x: auto;
+        margin-top: 2rem;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.9rem;
+      }
+
+      thead {
+        background: var(--surface2);
+      }
+
+      th {
+        padding: 0.9rem 1.2rem;
+        text-align: left;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--accent);
+      }
+
+      td {
+        padding: 0.85rem 1.2rem;
+        border-top: 1px solid var(--border);
+        color: var(--text-muted);
+        vertical-align: top;
+      }
+
+      tr:hover td {
+        background: rgba(255, 255, 255, 0.02);
+      }
+
+      /* ── CODE ── */
+      pre {
+        background: var(--code-bg);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 1.4rem 1.6rem;
+        overflow-x: auto;
+        margin: 1rem 0 1.5rem;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.85rem;
+        line-height: 1.7;
+        position: relative;
+      }
+
+      pre::before {
+        content: attr(data-lang);
+        position: absolute;
+        top: 0.6rem;
+        right: 1rem;
+        font-size: 0.68rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--accent);
+        opacity: 0.6;
+      }
+
+      code {
+        color: var(--accent);
+      }
+      pre code {
+        color: var(--text);
+      }
+
+      .kw {
+        color: #c792ea;
+      }
+      .str {
+        color: #c3e88d;
+      }
+      .cm {
+        color: #546e7a;
+        font-style: italic;
+      }
+      .fn {
+        color: #82aaff;
+      }
+      .bool {
+        color: var(--accent3);
+      }
+      .num {
+        color: var(--warn);
+      }
+
+      /* ── FIELD BLOCKS ── */
+      .field-block {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-left: 3px solid var(--accent);
+        border-radius: 12px;
+        padding: 1.75rem;
+        margin-bottom: 2rem;
+        transition: border-left-color 0.2s;
+      }
+
+      .field-block:hover {
+        border-left-color: var(--accent2);
+      }
+
+      .field-header {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+      }
+
+      .field-num {
+        width: 32px;
+        height: 32px;
+        background: linear-gradient(135deg, var(--accent), var(--accent2));
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.8rem;
+        font-weight: 800;
+        color: #fff;
+        flex-shrink: 0;
+      }
+
+      .field-title {
+        font-weight: 700;
+        font-size: 1rem;
+      }
+
+      .field-rule {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        margin-bottom: 0.75rem;
+      }
+
+      .regex-display {
+        background: var(--code-bg);
+        border: 1px solid rgba(0, 212, 255, 0.2);
+        border-radius: 8px;
+        padding: 0.6rem 1rem;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.9rem;
+        color: var(--accent);
+        margin-bottom: 1rem;
+        display: inline-block;
+        letter-spacing: 0.05em;
+      }
+
+      .examples {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+        margin-bottom: 1rem;
+      }
+
+      .ex {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-size: 0.82rem;
+        font-family: "JetBrains Mono", monospace;
+        padding: 0.3rem 0.75rem;
+        border-radius: 6px;
+      }
+
+      .ex.valid {
+        background: rgba(16, 185, 129, 0.1);
+        color: var(--accent3);
+        border: 1px solid rgba(16, 185, 129, 0.25);
+      }
+
+      .ex.invalid {
+        background: rgba(239, 68, 68, 0.08);
+        color: #f87171;
+        border: 1px solid rgba(239, 68, 68, 0.2);
+      }
+
+      /* ── CALLOUT ── */
+      .callout {
+        background: rgba(245, 158, 11, 0.08);
+        border: 1px solid rgba(245, 158, 11, 0.25);
+        border-radius: 10px;
+        padding: 1rem 1.25rem;
+        font-size: 0.88rem;
+        color: var(--warn);
+        margin: 1rem 0;
+      }
+
+      /* ── ESCAPE TABLE ── */
+      .escape-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin-top: 1.5rem;
+      }
+
+      .escape-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.85rem;
+      }
+
+      .escape-arrow {
+        color: var(--text-muted);
+      }
+
+      /* ── FOOTER ── */
+      footer {
+        text-align: center;
+        padding: 3rem 2rem;
+        color: var(--text-muted);
+        font-size: 0.82rem;
+        border-top: 1px solid var(--border);
+      }
+
+      footer a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+
+      .footer-github {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        font-weight: 600;
+        font-size: 0.82rem;
+        transition:
+          border-color 0.2s,
+          color 0.2s,
+          transform 0.2s;
+      }
+
+      .footer-github:hover {
+        border-color: rgba(0, 212, 255, 0.4);
+        color: var(--accent);
+        transform: translateY(-1px);
+      }
+
+      .footer-github svg {
+        width: 16px;
+        height: 16px;
+        fill: currentColor;
+      }
+
+      /* ── REFERENCIAS ── */
+      .ref-list {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        margin-top: 2rem;
+        counter-reset: ref;
+      }
+
+      .ref-item {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-left: 3px solid var(--accent);
+        border-radius: 12px;
+        padding: 1.25rem 1.5rem 1.25rem 3.5rem;
+        position: relative;
+        font-size: 0.92rem;
+        color: var(--text-muted);
+        line-height: 1.7;
+        transition:
+          border-left-color 0.2s,
+          transform 0.2s;
+        counter-increment: ref;
+      }
+
+      .ref-item:hover {
+        border-left-color: var(--accent2);
+        transform: translateX(3px);
+      }
+
+      .ref-item::before {
+        content: counter(ref, decimal-leading-zero);
+        position: absolute;
+        left: 1rem;
+        top: 1.25rem;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: var(--accent);
+        letter-spacing: 0.05em;
+      }
+
+      .ref-item cite {
+        font-style: italic;
+        color: var(--text);
+        font-weight: 600;
+      }
+
+      .ref-item a {
+        color: var(--accent);
+        text-decoration: none;
+        word-break: break-all;
+        border-bottom: 1px dashed rgba(0, 212, 255, 0.35);
+        transition:
+          color 0.2s,
+          border-color 0.2s;
+      }
+
+      .ref-item a:hover {
+        color: var(--accent2);
+        border-bottom-color: var(--accent2);
+      }
+
+      /* ── BACK TO TOP ── */
+      .back-to-top {
+        position: fixed;
+        bottom: 1.75rem;
+        right: 1.75rem;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--accent), var(--accent2));
+        border: 1px solid rgba(0, 212, 255, 0.4);
+        color: #fff;
+        font-size: 1.2rem;
+        font-weight: 800;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow:
+          0 8px 24px rgba(0, 212, 255, 0.25),
+          0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(12px);
+        transition:
+          opacity 0.3s ease,
+          transform 0.3s ease,
+          visibility 0.3s,
+          box-shadow 0.2s;
+        z-index: 200;
+      }
+
+      .back-to-top.visible {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+
+      .back-to-top:hover {
+        box-shadow: 0 10px 32px rgba(124, 58, 237, 0.4);
+        transform: translateY(-3px);
+      }
+
+      .back-to-top svg {
+        width: 20px;
+        height: 20px;
+        stroke: #fff;
+        stroke-width: 2.5;
+        fill: none;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      /* ── REGEX101 PROOFS ── */
+      .regex-proof {
+        margin-top: 1.25rem;
+        background: var(--code-bg);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .regex-proof figcaption {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.65rem 1rem;
+        background: var(--surface2);
+        border-bottom: 1px solid var(--border);
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--accent);
+      }
+
+      .regex-proof figcaption::before {
+        content: "";
+        width: 8px;
+        height: 8px;
+        background: var(--accent3);
+        border-radius: 50%;
+        box-shadow: 0 0 8px var(--accent3);
+      }
+
+      .regex-proof img {
+        display: block;
+        width: 100%;
+        height: auto;
+        cursor: zoom-in;
+        transition: opacity 0.2s;
+      }
+
+      .regex-proof img:hover {
+        opacity: 0.88;
+      }
+
+      /* ── LIGHTBOX ── */
+      .lightbox {
+        position: fixed;
+        inset: 0;
+        background: rgba(10, 14, 26, 0.75);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+        z-index: 500;
+        opacity: 0;
+        visibility: hidden;
+        transition:
+          opacity 0.3s ease,
+          visibility 0.3s;
+        cursor: zoom-out;
+      }
+
+      .lightbox.open {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .lightbox img {
+        max-width: 95vw;
+        max-height: 90vh;
+        border-radius: 14px;
+        border: 1px solid rgba(0, 212, 255, 0.2);
+        box-shadow:
+          0 30px 80px rgba(0, 0, 0, 0.55),
+          0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+        transform: scale(0.94);
+        transition: transform 0.3s ease;
+      }
+
+      .lightbox.open img {
+        transform: scale(1);
+      }
+
+      .lightbox-close {
+        position: absolute;
+        top: 1.25rem;
+        right: 1.5rem;
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        border: 1px solid var(--border);
+        background: rgba(17, 24, 39, 0.9);
+        color: var(--text);
+        font-size: 1.3rem;
+        font-weight: 700;
+        line-height: 1;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition:
+          border-color 0.2s,
+          color 0.2s,
+          transform 0.2s;
+      }
+
+      .lightbox-close:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+        transform: rotate(90deg);
+      }
+
+      body.lb-open {
+        overflow: hidden;
+      }
+
+      /* ── SCROLL ANIMATION ── */
+      .reveal {
+        opacity: 0;
+        transform: translateY(28px);
+        transition:
+          opacity 0.6s ease,
+          transform 0.6s ease;
+      }
+      .reveal.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-grid"></div>
+      <div class="hero-badge">
+        <div class="dot"></div>
+        POO · UNIMINUTO · 2026
+      </div>
+      <h1>Expresiones Regulares<br /><span>en Java</span></h1>
+      <p class="hero-sub">
+        Validación de datos en el sistema de inventario de
+        <strong style="color: var(--text)">KD-Electronics</strong> usando regex
+        con <code>java.util.regex</code>
+      </p>
+      <div class="hero-meta">
+        <div class="meta-item">
+          <span class="meta-label">Autor</span>
+          <span class="meta-value">Daniel Iván Gómez Hortúa</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Curso</span>
+          <span class="meta-value">Programación Orientada a Objetos</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Plataforma</span>
+          <span class="meta-value">Java · regex101</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- NAV -->
+    <nav>
+      <a href="#que-es">¿Qué es?</a>
+      <a href="#por-que">¿Por qué?</a>
+      <a href="#ventajas">Ventajas</a>
+      <a href="#caso">Caso KD</a>
+      <a href="#java">Java & Regex</a>
+      <a href="#referencias">Referencias</a>
+      <a
+        href="https://github.com/DanielGomezIH/blog-expresiones-regulares"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="nav-github"
+        aria-label="Ver repositorio en GitHub"
+        title="Ver repositorio en GitHub"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.082-.73.082-.73 1.205.085 1.84 1.237 1.84 1.237 1.07 1.835 2.807 1.305 3.492.998.108-.776.42-1.305.762-1.605-2.665-.305-5.467-1.335-5.467-5.93 0-1.31.468-2.38 1.236-3.22-.124-.303-.536-1.524.117-3.176 0 0 1.008-.322 3.3 1.23A11.5 11.5 0 0 1 12 5.8c1.02.005 2.047.138 3.003.404 2.29-1.552 3.297-1.23 3.297-1.23.655 1.652.243 2.873.12 3.176.77.84 1.234 1.91 1.234 3.22 0 4.61-2.807 5.62-5.48 5.92.43.37.813 1.102.813 2.222 0 1.606-.015 2.898-.015 3.293 0 .322.216.696.825.577C20.565 21.796 24 17.298 24 12c0-6.63-5.37-12-12-12z"
+          />
+        </svg>
+      </a>
+    </nav>
+
+    <!-- SECCIÓN 1: QUÉ ES -->
+    <section id="que-es">
+      <div class="container">
+        <div class="reveal">
+          <span class="section-tag">Sección 01</span>
+          <h2>¿Qué es una expresión regular?</h2>
+          <p>
+            Cuando empecé a investigar este tema me di cuenta de que una
+            <strong style="color: var(--text)">expresión regular</strong> (o
+            <em>regex</em>) es básicamente un
+            patrón escrito que le dice al
+            programa cómo debe verse un texto para considerarse como válido. Con el
+            mismo patrón puedo validar una entrada, buscar coincidencias dentro
+            de un texto largo o reemplazar partes específicas. Al principio los
+            símbolos pueden parecer confusos, pero después de explorar por un rato con
+            ejemplos pequeños la lógica se vuelve bastante intuitiva.
+          </p>
+          <p>
+            En Java todo esto vive dentro del paquete
+            <code>java.util.regex</code>, que existe desde Java 1.4. Las dos
+            clases que hay que  manipular son <code>Pattern</code> y
+            <code>Matcher</code>, aunque si uno quiere validar de manera rápida
+            está el atajo <code>String.matches()</code>. La documentación
+            oficial describe a <code>Pattern</code> como «<em
+              >una representación compilada de una expresión regular. Una
+              expresión regular, especificada como cadena de texto, debe primero
+              compilarse en una instancia de esta clase</em
+            >» (Oracle, 2024). En términos sencillos: <code>Pattern</code> es la
+            regla ya traducida a algo que la JVM (Java Virtual Machine) entiende bien, y
+            <code>Matcher</code> es el que se encarga de aplicarla sobre el
+            texto que sea que yo le pase.
+          </p>
+
+          <pre
+            data-lang="Java"
+          ><code><span class="cm">// Forma rápida con String.matches()</span>
+<span class="kw">String</span> texto = <span class="str">"Hola123"</span>;
+<span class="kw">boolean</span> resultado = texto.<span class="fn">matches</span>(<span class="str">"[A-Za-z0-9]+"</span>);
+System.out.<span class="fn">println</span>(resultado); <span class="cm">// true</span>
+
+<span class="cm">// Forma reutilizable con Pattern y Matcher</span>
+Pattern p = Pattern.<span class="fn">compile</span>(<span class="str">"[A-Za-z0-9]+"</span>);
+Matcher m = p.<span class="fn">matcher</span>(texto);
+System.out.<span class="fn">println</span>(m.<span class="fn">matches</span>()); <span class="cm">// true</span></code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECCIÓN 2: POR QUÉ -->
+    <section id="por-que">
+      <div class="container">
+        <div class="reveal">
+          <span class="section-tag">Sección 02</span>
+          <h2>¿Por qué usar expresiones regulares?</h2>
+          <p>
+            Uno de los aspectos que más me llamó la atención mientras investigaba es que las
+            expresiones regulares tienen muchas aplicaciones, por ejemplo: validando
+            formularios, revisando archivos de texto, leyendo logs,
+            transformando datos o incluso en la búsqueda avanzada en editores de código. No son una herramienta pensada para un solo problema,
+            y esa versatilidad fue lo que vi beneficioso para usarlas
+            en el proyecto de KD-Electronics. Además, si tenemos en cuenta el rendimiento, la propia Oracle deja un consejo:
+            «<em
+              >si un patrón va a usarse múltiples veces, compilarlo una vez y
+              reutilizarlo será más eficiente que invocar este método cada
+              vez</em
+            >» (Oracle, 2024). Básicamente, compilar una sola vez con
+            <code>Pattern.compile()</code> y guardar ese objeto es mucho mejor
+            que estar llamando <code>String.matches()</code> en cada validación.
+          </p>
+
+          <div class="card-grid">
+            <div class="card">
+              <div class="card-icon">🎯</div>
+              <h3>Validación precisa</h3>
+              <p>
+                Un solo patrón define exactamente qué formato es aceptable, sin
+                ambigüedades ni condicionales anidados.
+              </p>
+            </div>
+            <div class="card">
+              <div class="card-icon">♻️</div>
+              <h3>Reutilización</h3>
+              <p>
+                El mismo patrón compilado con <code>Pattern.compile()</code> se
+                aplica cuantas veces sea necesario sin recosto adicional.
+              </p>
+            </div>
+            <div class="card">
+              <div class="card-icon">⚡</div>
+              <h3>Rendimiento</h3>
+              <p>
+                La JVM procesa patrones compilados de forma eficiente, mucho más
+                rápido que cadenas de <code>if/else</code> equivalentes.
+              </p>
+            </div>
+            <div class="card">
+              <div class="card-icon">🔧</div>
+              <h3>Flexibilidad</h3>
+              <p>
+                Se adaptan a prácticamente cualquier formato: fechas, correos,
+                códigos de producto, precios decimales y más.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECCIÓN 3: VENTAJAS -->
+    <section id="ventajas">
+      <div class="container">
+        <div class="reveal">
+          <span class="section-tag">Sección 03</span>
+          <h2>Ventajas para la validación de datos</h2>
+          <p>
+            Aplicándolo al caso de KD-Electronics pude entender el por qué la
+            calidad de los datos importa tanto en un sistema de inventario. Si
+            alguien mete un código mal escrito, un precio con formato raro o una
+            categoría con caracteres que no deberían estar ahí, eso puede dañar
+            reportes, tronar integraciones externas o dejar la base de datos
+            llena de basura difícil de limpiar después. Es por eso  veo las regex
+            como una especie de guardia de segurida, ya que antes de que el dato llegue siquiera a
+            la capa de negocio, éste decide si entra o se devuelve con un
+            error claro.
+          </p>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Ventaja</th>
+                  <th>Descripción</th>
+                  <th>Ejemplo en inventario</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <strong style="color: var(--accent)">Precisión</strong>
+                  </td>
+                  <td>Define exactamente qué es válido</td>
+                  <td>
+                    El código de producto debe iniciar con <code>KD-</code>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <strong style="color: var(--accent)">Consistencia</strong>
+                  </td>
+                  <td>Mismas reglas en toda la aplicación</td>
+                  <td>Precios siempre en formato numérico positivo</td>
+                </tr>
+                <tr>
+                  <td>
+                    <strong style="color: var(--accent)">Mantenibilidad</strong>
+                  </td>
+                  <td>Cambiar una regex actualiza toda la validación</td>
+                  <td>Modificar la longitud del código en un solo lugar</td>
+                </tr>
+                <tr>
+                  <td>
+                    <strong style="color: var(--accent)">Legibilidad</strong>
+                  </td>
+                  <td>Reemplaza bloques de if/else extensos</td>
+                  <td>Validar precio en 1 línea vs 10+ condicionales</td>
+                </tr>
+                <tr>
+                  <td>
+                    <strong style="color: var(--accent)">Seguridad</strong>
+                  </td>
+                  <td>Previene inyecciones y datos maliciosos</td>
+                  <td>Rechazar caracteres especiales en nombres</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECCIÓN 4: CASO KD -->
+    <section id="caso">
+      <div class="container">
+        <div class="reveal">
+          <span class="section-tag">Sección 04</span>
+          <h2>Caso KD-Electronics</h2>
+          <p>
+            KD-Electronics requiere un módulo CRUD de productos con los campos:
+            <strong style="color: var(--text)"
+              >código de producto, nombre, descripción, precio base, precio de
+              venta, categoría y cantidad disponible</strong
+            >. El delete es lógico (no físico) y el read filtra por código de
+            producto.
+          </p>
+          <p>
+            A continuación se presentan cada campo con su regla de negocio, la
+            expresión regular correspondiente y su implementación en Java.
+          </p>
+
+          <!-- CAMPO 1 -->
+          <div class="field-block">
+            <div class="field-header">
+              <div class="field-num">01</div>
+              <span class="field-title">Código de producto</span>
+            </div>
+            <p class="field-rule">
+              📌 Regla: Prefijo <code>KD-</code> seguido de 4 a 8 caracteres
+              alfanuméricos en mayúscula. Inmutable: no se modifica tras la
+              creación.
+            </p>
+            <div class="regex-display">^KD-[A-Z0-9]{4,8}$</div>
+            <div class="examples">
+              <span class="ex valid">✓ KD-ELEC001</span>
+              <span class="ex valid">✓ KD-TV4K</span>
+              <span class="ex invalid">✗ kd-abc</span>
+              <span class="ex invalid">✗ KD-1</span>
+            </div>
+            <pre
+              data-lang="Java"
+            ><code><span class="kw">String</span> codigo = <span class="str">"KD-ELEC001"</span>;
+<span class="kw">boolean</span> valido = codigo.<span class="fn">matches</span>(<span class="str">"^KD-[A-Z0-9]{4,8}$"</span>);
+System.out.<span class="fn">println</span>(valido); <span class="cm">// true</span></code></pre>
+            <figure class="regex-proof">
+              <figcaption>Validación en regex101</figcaption>
+              <img
+                src="images/regex-01-codigo.png"
+                alt="Validación del código de producto KD-ELEC001 en regex101 con el patrón ^KD-[A-Z0-9]{4,8}$"
+                loading="lazy"
+              />
+            </figure>
+          </div>
+
+          <!-- CAMPO 2 -->
+          <div class="field-block">
+            <div class="field-header">
+              <div class="field-num">02</div>
+              <span class="field-title">Nombre del producto</span>
+            </div>
+            <p class="field-rule">
+              📌 Regla: Letras (con tildes y ñ), espacios, entre 3 y 100
+              caracteres. Sin números ni caracteres especiales.
+            </p>
+            <div class="regex-display">^[A-Za-záéíóúÁÉÍÓÚñÑ\s]{3,100}$</div>
+            <div class="examples">
+              <span class="ex valid">✓ Televisor Samsung</span>
+              <span class="ex valid">✓ Auriculares Bluetooth</span>
+              <span class="ex invalid">✗ TV@2024</span>
+              <span class="ex invalid">✗ AB</span>
+            </div>
+            <pre
+              data-lang="Java"
+            ><code><span class="kw">String</span> nombre = <span class="str">"Televisor Samsung"</span>;
+<span class="kw">boolean</span> valido = nombre.<span class="fn">matches</span>(<span class="str">"^[A-Za-záéíóúÁÉÍÓÚñÑ\\s]{3,100}$"</span>);
+System.out.<span class="fn">println</span>(valido); <span class="cm">// true</span></code></pre>
+            <figure class="regex-proof">
+              <figcaption>Validación en regex101</figcaption>
+              <img
+                src="images/regex-02-nombre.png"
+                alt="Validación del nombre Televisor Samsung en regex101 con el patrón ^[A-Za-záéíóúÁÉÍÓÚñÑ\s]{3,100}$"
+                loading="lazy"
+              />
+            </figure>
+          </div>
+
+          <!-- CAMPO 3 -->
+          <div class="field-block">
+            <div class="field-header">
+              <div class="field-num">03</div>
+              <span class="field-title">Descripción</span>
+            </div>
+            <p class="field-rule">
+              📌 Regla: Texto libre (cualquier carácter, incluyendo saltos de
+              línea), mínimo 10 y máximo 500 caracteres.
+            </p>
+            <div class="regex-display">^[\s\S]{10,500}$</div>
+            <div class="examples">
+              <span class="ex valid">✓ Televisor QLED 55 pulgadas 4K HDR</span>
+              <span class="ex invalid">✗ TV (muy corto)</span>
+            </div>
+            <pre
+              data-lang="Java"
+            ><code><span class="kw">String</span> desc = <span class="str">"Televisor QLED 55 pulgadas con resolución 4K"</span>;
+<span class="kw">boolean</span> valido = desc.<span class="fn">matches</span>(<span class="str">"^[\\s\\S]{10,500}$"</span>);
+System.out.<span class="fn">println</span>(valido); <span class="cm">// true</span></code></pre>
+            <div class="callout">
+              ⚠️ El <code>.</code> en Java no captura saltos de línea por
+              defecto. Se usa <code>[\s\S]</code> para abarcar cualquier
+              carácter, incluyendo <code>\n</code>.
+            </div>
+            <figure class="regex-proof">
+              <figcaption>Validación en regex101</figcaption>
+              <img
+                src="images/regex-03-descripcion.png"
+                alt="Validación de la descripción Televisor QLED 55 pulgadas con resolución 4K en regex101 con el patrón ^[\s\S]{10,500}$"
+                loading="lazy"
+              />
+            </figure>
+          </div>
+
+          <!-- CAMPO 4 -->
+          <div class="field-block">
+            <div class="field-header">
+              <div class="field-num">04</div>
+              <span class="field-title">Precio base</span>
+            </div>
+            <p class="field-rule">
+              📌 Regla: Número decimal positivo mayor que cero. Máximo 2
+              decimales opcionales. No admite negativos ni cero.
+            </p>
+            <div class="regex-display">^[1-9]\d*(\.\d{1,2})?$</div>
+            <div class="examples">
+              <span class="ex valid">✓ 1500000.99</span>
+              <span class="ex valid">✓ 250000</span>
+              <span class="ex invalid">✗ 0</span>
+              <span class="ex invalid">✗ -500</span>
+              <span class="ex invalid">✗ 100.999</span>
+            </div>
+            <pre
+              data-lang="Java"
+            ><code><span class="kw">String</span> precioBase = <span class="str">"1500000.99"</span>;
+<span class="kw">boolean</span> valido = precioBase.<span class="fn">matches</span>(<span class="str">"^[1-9]\\d*(\\.\\d{1,2})?$"</span>);
+System.out.<span class="fn">println</span>(valido); <span class="cm">// true</span></code></pre>
+            <figure class="regex-proof">
+              <figcaption>Validación en regex101</figcaption>
+              <img
+                src="images/regex-04-precio-base.png"
+                alt="Validación del precio base 1500000.99 en regex101 con el patrón ^[1-9]\d*(\.\d{1,2})?$"
+                loading="lazy"
+              />
+            </figure>
+          </div>
+
+          <!-- CAMPO 5 -->
+          <div class="field-block">
+            <div class="field-header">
+              <div class="field-num">05</div>
+              <span class="field-title">Precio de venta</span>
+            </div>
+            <p class="field-rule">
+              📌 Regla: Idéntica al precio base. Número decimal positivo mayor
+              que cero, hasta 2 decimales.
+            </p>
+            <div class="regex-display">^[1-9]\d*(\.\d{1,2})?$</div>
+            <div class="examples">
+              <span class="ex valid">✓ 1750000</span>
+              <span class="ex valid">✓ 89900.50</span>
+              <span class="ex invalid">✗ 0.00</span>
+            </div>
+            <pre
+              data-lang="Java"
+            ><code><span class="kw">String</span> precioVenta = <span class="str">"1750000"</span>;
+<span class="kw">boolean</span> valido = precioVenta.<span class="fn">matches</span>(<span class="str">"^[1-9]\\d*(\\.\\d{1,2})?$"</span>);
+System.out.<span class="fn">println</span>(valido); <span class="cm">// true</span></code></pre>
+            <figure class="regex-proof">
+              <figcaption>Validación en regex101</figcaption>
+              <img
+                src="images/regex-05-precio-venta.png"
+                alt="Validación del precio de venta 1750000 en regex101 con el patrón ^[1-9]\d*(\.\d{1,2})?$"
+                loading="lazy"
+              />
+            </figure>
+          </div>
+
+          <!-- CAMPO 6 -->
+          <div class="field-block">
+            <div class="field-header">
+              <div class="field-num">06</div>
+              <span class="field-title">Categoría</span>
+            </div>
+            <p class="field-rule">
+              📌 Regla: Solo letras (con tildes y ñ) y espacios. Entre 3 y 50
+              caracteres.
+            </p>
+            <div class="regex-display">^[A-Za-záéíóúÁÉÍÓÚñÑ\s]{3,50}$</div>
+            <div class="examples">
+              <span class="ex valid">✓ Electrodomésticos</span>
+              <span class="ex valid">✓ Audio y Video</span>
+              <span class="ex invalid">✗ Cat#1</span>
+            </div>
+            <pre
+              data-lang="Java"
+            ><code><span class="kw">String</span> categoria = <span class="str">"Electrodomésticos"</span>;
+<span class="kw">boolean</span> valido = categoria.<span class="fn">matches</span>(<span class="str">"^[A-Za-záéíóúÁÉÍÓÚñÑ\\s]{3,50}$"</span>);
+System.out.<span class="fn">println</span>(valido); <span class="cm">// true</span></code></pre>
+            <figure class="regex-proof">
+              <figcaption>Validación en regex101</figcaption>
+              <img
+                src="images/regex-06-categoria.png"
+                alt="Validación de la categoría Electrodomésticos en regex101 con el patrón ^[A-Za-záéíóúÁÉÍÓÚñÑ\s]{3,50}$"
+                loading="lazy"
+              />
+            </figure>
+          </div>
+
+          <!-- CAMPO 7 -->
+          <div class="field-block">
+            <div class="field-header">
+              <div class="field-num">07</div>
+              <span class="field-title">Cantidad disponible</span>
+            </div>
+            <p class="field-rule">
+              📌 Regla: Número entero mayor o igual a cero. No admite decimales
+              ni negativos.
+            </p>
+            <div class="regex-display">^\d+$</div>
+            <div class="examples">
+              <span class="ex valid">✓ 0</span>
+              <span class="ex valid">✓ 250</span>
+              <span class="ex invalid">✗ -5</span>
+              <span class="ex invalid">✗ 12.5</span>
+            </div>
+            <pre
+              data-lang="Java"
+            ><code><span class="kw">String</span> cantidad = <span class="str">"250"</span>;
+<span class="kw">boolean</span> valido = cantidad.<span class="fn">matches</span>(<span class="str">"^\\d+$"</span>);
+System.out.<span class="fn">println</span>(valido); <span class="cm">// true</span></code></pre>
+            <figure class="regex-proof">
+              <figcaption>Validación en regex101</figcaption>
+              <img
+                src="images/regex-07-cantidad.png"
+                alt="Validación de la cantidad 250 en regex101 con el patrón ^\d+$"
+                loading="lazy"
+              />
+            </figure>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECCIÓN 5: CLASE VALIDADORA -->
+    <section id="java">
+      <div class="container">
+        <div class="reveal">
+          <span class="section-tag">Sección 05</span>
+          <h2>Clase validadora en Java</h2>
+          <p>
+            Para cerrar, junté todas las expresiones regulares en una sola
+            clase <code>ValidadorProducto</code>. Así cada campo del CRUD
+            tiene su propio método y puedo llamarlos desde cualquier parte
+            del proyecto sin repetir el patrón.
+          </p>
+
+          <pre
+            data-lang="Java"
+          ><code><span class="cm">// Ejemplo completo: validar todos los campos del producto</span>
+<span class="kw">public class</span> <span class="fn">ValidadorProducto</span> {
+
+    <span class="kw">private static final</span> String REGEX_CODIGO   = <span class="str">"^KD-[A-Z0-9]{4,8}$"</span>;
+    <span class="kw">private static final</span> String REGEX_NOMBRE    = <span class="str">"^[A-Za-záéíóúÁÉÍÓÚñÑ\\s]{3,100}$"</span>;
+    <span class="kw">private static final</span> String REGEX_DESC      = <span class="str">"^[\\s\\S]{10,500}$"</span>;
+    <span class="kw">private static final</span> String REGEX_PRECIO    = <span class="str">"^[1-9]\\d*(\\.\\d{1,2})?$"</span>;
+    <span class="kw">private static final</span> String REGEX_CATEGORIA = <span class="str">"^[A-Za-záéíóúÁÉÍÓÚñÑ\\s]{3,50}$"</span>;
+    <span class="kw">private static final</span> String REGEX_CANTIDAD  = <span class="str">"^\\d+$"</span>;
+
+    <span class="kw">public static boolean</span> <span class="fn">validarCodigo</span>(String v)    { <span class="kw">return</span> v.<span class="fn">matches</span>(REGEX_CODIGO); }
+    <span class="kw">public static boolean</span> <span class="fn">validarNombre</span>(String v)    { <span class="kw">return</span> v.<span class="fn">matches</span>(REGEX_NOMBRE); }
+    <span class="kw">public static boolean</span> <span class="fn">validarDescripcion</span>(String v){ <span class="kw">return</span> v.<span class="fn">matches</span>(REGEX_DESC); }
+    <span class="kw">public static boolean</span> <span class="fn">validarPrecio</span>(String v)    { <span class="kw">return</span> v.<span class="fn">matches</span>(REGEX_PRECIO); }
+    <span class="kw">public static boolean</span> <span class="fn">validarCategoria</span>(String v)  { <span class="kw">return</span> v.<span class="fn">matches</span>(REGEX_CATEGORIA); }
+    <span class="kw">public static boolean</span> <span class="fn">validarCantidad</span>(String v)  { <span class="kw">return</span> v.<span class="fn">matches</span>(REGEX_CANTIDAD); }
+}</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECCIÓN 6: REFERENCIAS -->
+    <section id="referencias">
+      <div class="container">
+        <div class="reveal">
+          <span class="section-tag">Sección 06</span>
+          <h2>Referencias</h2>
+          <p>
+            Fuentes bibliográficas y documentación consultada para la
+            elaboración de este blog, citadas en formato APA.
+          </p>
+
+          <ol class="ref-list">
+            <li class="ref-item">
+              Oracle. (2024). <cite>Class Pattern</cite>. Java SE 21
+              Documentation.
+              <a
+                href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/regex/Pattern.html"
+                target="_blank"
+                rel="noopener noreferrer"
+                >https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/regex/Pattern.html</a
+              >
+            </li>
+            <li class="ref-item">
+              Stack Overflow contributors. (2019). <cite>Learning JDBC</cite>.
+              Riptutorial.
+              <a
+                href="https://riptutorial.com/java"
+                target="_blank"
+                rel="noopener noreferrer"
+                >https://riptutorial.com/java</a
+              >
+            </li>
+            <li class="ref-item">
+              Toro, M. (2022). <cite>Fundamentos de programación: Java</cite>.
+              Editorial Universidad de Sevilla.
+            </li>
+            <li class="ref-item">
+              Autentia. (2020).
+              <cite>Back. Introducción al Backend y Java. Primera parte</cite>.
+              Guía para directivos y técnicos.
+            </li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+      <p>
+        Blog ·
+        <strong>Programación Orientada a Objetos</strong> · UNIMINUTO 2026
+      </p>
+      <p style="margin-top: 0.5rem">Daniel Iván Gómez Hortúa</p>
+      <p style="margin-top: 1rem">
+        <a
+          href="https://github.com/DanielGomezIH/blog-expresiones-regulares"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="footer-github"
+          aria-label="Repositorio en GitHub"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path
+              d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.082-.73.082-.73 1.205.085 1.84 1.237 1.84 1.237 1.07 1.835 2.807 1.305 3.492.998.108-.776.42-1.305.762-1.605-2.665-.305-5.467-1.335-5.467-5.93 0-1.31.468-2.38 1.236-3.22-.124-.303-.536-1.524.117-3.176 0 0 1.008-.322 3.3 1.23A11.5 11.5 0 0 1 12 5.8c1.02.005 2.047.138 3.003.404 2.29-1.552 3.297-1.23 3.297-1.23.655 1.652.243 2.873.12 3.176.77.84 1.234 1.91 1.234 3.22 0 4.61-2.807 5.62-5.48 5.92.43.37.813 1.102.813 2.222 0 1.606-.015 2.898-.015 3.293 0 .322.216.696.825.577C20.565 21.796 24 17.298 24 12c0-6.63-5.37-12-12-12z"
+            />
+          </svg>
+          <span>Ver código en GitHub</span>
+        </a>
+      </p>
+    </footer>
+
+    <!-- LIGHTBOX -->
+    <div
+      class="lightbox"
+      id="lightbox"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Imagen ampliada"
+    >
+      <button class="lightbox-close" id="lightboxClose" aria-label="Cerrar">
+        ✕
+      </button>
+      <img id="lightboxImg" src="" alt="" />
+    </div>
+
+    <!-- BACK TO TOP -->
+    <button
+      class="back-to-top"
+      id="backToTop"
+      aria-label="Volver al inicio"
+      title="Volver al inicio"
+    >
+      <svg viewBox="0 0 24 24">
+        <polyline points="6 15 12 9 18 15"></polyline>
+      </svg>
+    </button>
+
+    <script>
+      // Scroll reveal
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              e.target.classList.add("visible");
+              observer.unobserve(e.target);
+            }
+          });
+        },
+        { threshold: 0.1 },
+      );
+
+      document
+        .querySelectorAll(".reveal")
+        .forEach((el) => observer.observe(el));
+
+      // Back to top
+      const backBtn = document.getElementById("backToTop");
+      window.addEventListener(
+        "scroll",
+        () => {
+          if (window.scrollY > 400) backBtn.classList.add("visible");
+          else backBtn.classList.remove("visible");
+        },
+        { passive: true },
+      );
+
+      backBtn.addEventListener("click", () => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+
+      // Lightbox
+      const lightbox = document.getElementById("lightbox");
+      const lightboxImg = document.getElementById("lightboxImg");
+      const lightboxClose = document.getElementById("lightboxClose");
+
+      const openLightbox = (src, alt) => {
+        lightboxImg.src = src;
+        lightboxImg.alt = alt || "";
+        lightbox.classList.add("open");
+        document.body.classList.add("lb-open");
+      };
+
+      const closeLightbox = () => {
+        lightbox.classList.remove("open");
+        document.body.classList.remove("lb-open");
+      };
+
+      document.querySelectorAll(".regex-proof img").forEach((img) => {
+        img.addEventListener("click", () => openLightbox(img.src, img.alt));
+      });
+
+      lightbox.addEventListener("click", (e) => {
+        if (e.target === lightbox || e.target === lightboxClose)
+          closeLightbox();
+      });
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && lightbox.classList.contains("open"))
+          closeLightbox();
+      });
+    </script>
+  </body>
+</html>
