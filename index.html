@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
@@ -10,832 +10,7 @@
       href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap"
       rel="stylesheet"
     />
-    <style>
-      :root {
-        --bg: #0a0e1a;
-        --surface: #111827;
-        --surface2: #1a2236;
-        --accent: #00d4ff;
-        --accent2: #7c3aed;
-        --accent3: #10b981;
-        --warn: #f59e0b;
-        --text: #e2e8f0;
-        --text-muted: #94a3b8;
-        --border: rgba(255, 255, 255, 0.07);
-        --code-bg: #0d1117;
-      }
-
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-
-      html {
-        scroll-behavior: smooth;
-      }
-
-      body {
-        font-family: "Sora", sans-serif;
-        background: var(--bg);
-        color: var(--text);
-        line-height: 1.75;
-        overflow-x: hidden;
-      }
-
-      /* ── HERO ── */
-      .hero {
-        position: relative;
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        padding: 4rem 2rem;
-        overflow: hidden;
-      }
-
-      .hero::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background:
-          radial-gradient(
-            ellipse 80% 60% at 50% 0%,
-            rgba(0, 212, 255, 0.12) 0%,
-            transparent 70%
-          ),
-          radial-gradient(
-            ellipse 60% 50% at 80% 80%,
-            rgba(124, 58, 237, 0.1) 0%,
-            transparent 60%
-          );
-      }
-
-      .hero-grid {
-        position: absolute;
-        inset: 0;
-        background-image:
-          linear-gradient(rgba(0, 212, 255, 0.04) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(0, 212, 255, 0.04) 1px, transparent 1px);
-        background-size: 48px 48px;
-      }
-
-      .hero-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        background: rgba(0, 212, 255, 0.1);
-        border: 1px solid rgba(0, 212, 255, 0.3);
-        border-radius: 999px;
-        padding: 0.4rem 1.2rem;
-        font-size: 0.78rem;
-        font-weight: 600;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-        color: var(--accent);
-        margin-bottom: 2rem;
-        position: relative;
-        animation: fadeDown 0.8s ease both;
-      }
-
-      .dot {
-        width: 8px;
-        height: 8px;
-        background: var(--accent);
-        border-radius: 50%;
-        animation: pulse 2s infinite;
-      }
-
-      @keyframes pulse {
-        0%,
-        100% {
-          opacity: 1;
-          transform: scale(1);
-        }
-        50% {
-          opacity: 0.5;
-          transform: scale(0.8);
-        }
-      }
-
-      .hero h1 {
-        font-size: clamp(2.4rem, 6vw, 5rem);
-        font-weight: 800;
-        line-height: 1.1;
-        letter-spacing: -0.02em;
-        position: relative;
-        animation: fadeDown 0.9s 0.1s ease both;
-      }
-
-      .hero h1 span {
-        background: linear-gradient(135deg, var(--accent), var(--accent2));
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-      }
-
-      .hero-sub {
-        margin-top: 1.5rem;
-        font-size: 1.15rem;
-        color: var(--text-muted);
-        max-width: 600px;
-        position: relative;
-        animation: fadeDown 1s 0.2s ease both;
-      }
-
-      .hero-meta {
-        margin-top: 3rem;
-        display: flex;
-        gap: 2rem;
-        justify-content: center;
-        flex-wrap: wrap;
-        position: relative;
-        animation: fadeDown 1s 0.3s ease both;
-      }
-
-      .meta-item {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 0.25rem;
-      }
-
-      .meta-label {
-        font-size: 0.72rem;
-        text-transform: uppercase;
-        letter-spacing: 0.1em;
-        color: var(--text-muted);
-      }
-
-      .meta-value {
-        font-size: 0.9rem;
-        font-weight: 600;
-        color: var(--accent);
-      }
-
-      @keyframes fadeDown {
-        from {
-          opacity: 0;
-          transform: translateY(-20px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-
-      /* ── NAV ── */
-      nav {
-        position: sticky;
-        top: 0;
-        z-index: 100;
-        background: rgba(10, 14, 26, 0.85);
-        backdrop-filter: blur(16px);
-        border-bottom: 1px solid var(--border);
-        padding: 0 2rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 2.5rem;
-        height: 56px;
-      }
-
-      nav a {
-        color: var(--text-muted);
-        text-decoration: none;
-        font-size: 0.82rem;
-        font-weight: 600;
-        letter-spacing: 0.05em;
-        text-transform: uppercase;
-        transition: color 0.2s;
-      }
-
-      nav a:hover {
-        color: var(--accent);
-      }
-
-      nav a.nav-github {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        border: 1px solid var(--border);
-        color: var(--text-muted);
-        transition:
-          color 0.2s,
-          border-color 0.2s,
-          transform 0.2s;
-      }
-
-      nav a.nav-github:hover {
-        color: var(--accent);
-        border-color: rgba(0, 212, 255, 0.4);
-        transform: translateY(-1px);
-      }
-
-      nav a.nav-github svg {
-        width: 16px;
-        height: 16px;
-        fill: currentColor;
-      }
-
-      /* ── LAYOUT ── */
-      .container {
-        max-width: 860px;
-        margin: 0 auto;
-        padding: 0 2rem;
-      }
-
-      section {
-        padding: 5rem 0;
-        border-bottom: 1px solid var(--border);
-      }
-
-      .section-tag {
-        display: inline-block;
-        font-size: 0.72rem;
-        font-weight: 700;
-        letter-spacing: 0.15em;
-        text-transform: uppercase;
-        color: var(--accent);
-        margin-bottom: 1rem;
-      }
-
-      h2 {
-        font-size: clamp(1.6rem, 3vw, 2.2rem);
-        font-weight: 800;
-        letter-spacing: -0.02em;
-        margin-bottom: 1.5rem;
-        line-height: 1.2;
-      }
-
-      h3 {
-        font-size: 1.15rem;
-        font-weight: 700;
-        margin-bottom: 0.75rem;
-        color: var(--text);
-      }
-
-      p {
-        color: var(--text-muted);
-        margin-bottom: 1.2rem;
-        font-size: 1rem;
-      }
-
-      /* ── CARDS ── */
-      .card-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1.25rem;
-        margin-top: 2rem;
-      }
-
-      @media (max-width: 600px) {
-        .card-grid {
-          grid-template-columns: 1fr;
-        }
-      }
-
-      .card {
-        background: var(--surface);
-        border: 1px solid var(--border);
-        border-radius: 16px;
-        padding: 1.5rem;
-        transition:
-          border-color 0.25s,
-          transform 0.25s;
-      }
-
-      .card:hover {
-        border-color: rgba(0, 212, 255, 0.3);
-        transform: translateY(-3px);
-      }
-
-      .card-icon {
-        font-size: 1.8rem;
-        margin-bottom: 0.75rem;
-      }
-
-      .card h3 {
-        font-size: 0.95rem;
-        margin-bottom: 0.4rem;
-      }
-
-      .card p {
-        font-size: 0.88rem;
-        margin: 0;
-      }
-
-      /* ── TABLE ── */
-      .table-wrap {
-        overflow-x: auto;
-        margin-top: 2rem;
-        border-radius: 12px;
-        border: 1px solid var(--border);
-      }
-
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 0.9rem;
-      }
-
-      thead {
-        background: var(--surface2);
-      }
-
-      th {
-        padding: 0.9rem 1.2rem;
-        text-align: left;
-        font-size: 0.75rem;
-        font-weight: 700;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        color: var(--accent);
-      }
-
-      td {
-        padding: 0.85rem 1.2rem;
-        border-top: 1px solid var(--border);
-        color: var(--text-muted);
-        vertical-align: top;
-      }
-
-      tr:hover td {
-        background: rgba(255, 255, 255, 0.02);
-      }
-
-      /* ── CODE ── */
-      pre {
-        background: var(--code-bg);
-        border: 1px solid var(--border);
-        border-radius: 12px;
-        padding: 1.4rem 1.6rem;
-        overflow-x: auto;
-        margin: 1rem 0 1.5rem;
-        font-family: "JetBrains Mono", monospace;
-        font-size: 0.85rem;
-        line-height: 1.7;
-        position: relative;
-      }
-
-      pre::before {
-        content: attr(data-lang);
-        position: absolute;
-        top: 0.6rem;
-        right: 1rem;
-        font-size: 0.68rem;
-        font-weight: 700;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        color: var(--accent);
-        opacity: 0.6;
-      }
-
-      code {
-        color: var(--accent);
-      }
-      pre code {
-        color: var(--text);
-      }
-
-      .kw {
-        color: #c792ea;
-      }
-      .str {
-        color: #c3e88d;
-      }
-      .cm {
-        color: #546e7a;
-        font-style: italic;
-      }
-      .fn {
-        color: #82aaff;
-      }
-      .bool {
-        color: var(--accent3);
-      }
-      .num {
-        color: var(--warn);
-      }
-
-      /* ── FIELD BLOCKS ── */
-      .field-block {
-        background: var(--surface);
-        border: 1px solid var(--border);
-        border-left: 3px solid var(--accent);
-        border-radius: 12px;
-        padding: 1.75rem;
-        margin-bottom: 2rem;
-        transition: border-left-color 0.2s;
-      }
-
-      .field-block:hover {
-        border-left-color: var(--accent2);
-      }
-
-      .field-header {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        margin-bottom: 1rem;
-      }
-
-      .field-num {
-        width: 32px;
-        height: 32px;
-        background: linear-gradient(135deg, var(--accent), var(--accent2));
-        border-radius: 8px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 0.8rem;
-        font-weight: 800;
-        color: #fff;
-        flex-shrink: 0;
-      }
-
-      .field-title {
-        font-weight: 700;
-        font-size: 1rem;
-      }
-
-      .field-rule {
-        font-size: 0.85rem;
-        color: var(--text-muted);
-        margin-bottom: 0.75rem;
-      }
-
-      .regex-display {
-        background: var(--code-bg);
-        border: 1px solid rgba(0, 212, 255, 0.2);
-        border-radius: 8px;
-        padding: 0.6rem 1rem;
-        font-family: "JetBrains Mono", monospace;
-        font-size: 0.9rem;
-        color: var(--accent);
-        margin-bottom: 1rem;
-        display: inline-block;
-        letter-spacing: 0.05em;
-      }
-
-      .examples {
-        display: flex;
-        gap: 0.75rem;
-        flex-wrap: wrap;
-        margin-bottom: 1rem;
-      }
-
-      .ex {
-        display: flex;
-        align-items: center;
-        gap: 0.4rem;
-        font-size: 0.82rem;
-        font-family: "JetBrains Mono", monospace;
-        padding: 0.3rem 0.75rem;
-        border-radius: 6px;
-      }
-
-      .ex.valid {
-        background: rgba(16, 185, 129, 0.1);
-        color: var(--accent3);
-        border: 1px solid rgba(16, 185, 129, 0.25);
-      }
-
-      .ex.invalid {
-        background: rgba(239, 68, 68, 0.08);
-        color: #f87171;
-        border: 1px solid rgba(239, 68, 68, 0.2);
-      }
-
-      /* ── CALLOUT ── */
-      .callout {
-        background: rgba(245, 158, 11, 0.08);
-        border: 1px solid rgba(245, 158, 11, 0.25);
-        border-radius: 10px;
-        padding: 1rem 1.25rem;
-        font-size: 0.88rem;
-        color: var(--warn);
-        margin: 1rem 0;
-      }
-
-      /* ── ESCAPE TABLE ── */
-      .escape-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 1rem;
-        margin-top: 1.5rem;
-      }
-
-      .escape-item {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        background: var(--surface);
-        border: 1px solid var(--border);
-        border-radius: 8px;
-        padding: 0.75rem 1rem;
-        font-family: "JetBrains Mono", monospace;
-        font-size: 0.85rem;
-      }
-
-      .escape-arrow {
-        color: var(--text-muted);
-      }
-
-      /* ── FOOTER ── */
-      footer {
-        text-align: center;
-        padding: 3rem 2rem;
-        color: var(--text-muted);
-        font-size: 0.82rem;
-        border-top: 1px solid var(--border);
-      }
-
-      footer a {
-        color: var(--accent);
-        text-decoration: none;
-      }
-
-      .footer-github {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        padding: 0.5rem 1rem;
-        border: 1px solid var(--border);
-        border-radius: 999px;
-        font-weight: 600;
-        font-size: 0.82rem;
-        transition:
-          border-color 0.2s,
-          color 0.2s,
-          transform 0.2s;
-      }
-
-      .footer-github:hover {
-        border-color: rgba(0, 212, 255, 0.4);
-        color: var(--accent);
-        transform: translateY(-1px);
-      }
-
-      .footer-github svg {
-        width: 16px;
-        height: 16px;
-        fill: currentColor;
-      }
-
-      /* ── REFERENCIAS ── */
-      .ref-list {
-        list-style: none;
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-        margin-top: 2rem;
-        counter-reset: ref;
-      }
-
-      .ref-item {
-        background: var(--surface);
-        border: 1px solid var(--border);
-        border-left: 3px solid var(--accent);
-        border-radius: 12px;
-        padding: 1.25rem 1.5rem 1.25rem 3.5rem;
-        position: relative;
-        font-size: 0.92rem;
-        color: var(--text-muted);
-        line-height: 1.7;
-        transition:
-          border-left-color 0.2s,
-          transform 0.2s;
-        counter-increment: ref;
-      }
-
-      .ref-item:hover {
-        border-left-color: var(--accent2);
-        transform: translateX(3px);
-      }
-
-      .ref-item::before {
-        content: counter(ref, decimal-leading-zero);
-        position: absolute;
-        left: 1rem;
-        top: 1.25rem;
-        font-family: "JetBrains Mono", monospace;
-        font-size: 0.8rem;
-        font-weight: 700;
-        color: var(--accent);
-        letter-spacing: 0.05em;
-      }
-
-      .ref-item cite {
-        font-style: italic;
-        color: var(--text);
-        font-weight: 600;
-      }
-
-      .ref-item a {
-        color: var(--accent);
-        text-decoration: none;
-        word-break: break-all;
-        border-bottom: 1px dashed rgba(0, 212, 255, 0.35);
-        transition:
-          color 0.2s,
-          border-color 0.2s;
-      }
-
-      .ref-item a:hover {
-        color: var(--accent2);
-        border-bottom-color: var(--accent2);
-      }
-
-      /* ── BACK TO TOP ── */
-      .back-to-top {
-        position: fixed;
-        bottom: 1.75rem;
-        right: 1.75rem;
-        width: 48px;
-        height: 48px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, var(--accent), var(--accent2));
-        border: 1px solid rgba(0, 212, 255, 0.4);
-        color: #fff;
-        font-size: 1.2rem;
-        font-weight: 800;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow:
-          0 8px 24px rgba(0, 212, 255, 0.25),
-          0 0 0 1px rgba(255, 255, 255, 0.04) inset;
-        opacity: 0;
-        visibility: hidden;
-        transform: translateY(12px);
-        transition:
-          opacity 0.3s ease,
-          transform 0.3s ease,
-          visibility 0.3s,
-          box-shadow 0.2s;
-        z-index: 200;
-      }
-
-      .back-to-top.visible {
-        opacity: 1;
-        visibility: visible;
-        transform: translateY(0);
-      }
-
-      .back-to-top:hover {
-        box-shadow: 0 10px 32px rgba(124, 58, 237, 0.4);
-        transform: translateY(-3px);
-      }
-
-      .back-to-top svg {
-        width: 20px;
-        height: 20px;
-        stroke: #fff;
-        stroke-width: 2.5;
-        fill: none;
-        stroke-linecap: round;
-        stroke-linejoin: round;
-      }
-
-      /* ── REGEX101 PROOFS ── */
-      .regex-proof {
-        margin-top: 1.25rem;
-        background: var(--code-bg);
-        border: 1px solid var(--border);
-        border-radius: 12px;
-        overflow: hidden;
-        position: relative;
-      }
-
-      .regex-proof figcaption {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        padding: 0.65rem 1rem;
-        background: var(--surface2);
-        border-bottom: 1px solid var(--border);
-        font-size: 0.72rem;
-        font-weight: 700;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-        color: var(--accent);
-      }
-
-      .regex-proof figcaption::before {
-        content: "";
-        width: 8px;
-        height: 8px;
-        background: var(--accent3);
-        border-radius: 50%;
-        box-shadow: 0 0 8px var(--accent3);
-      }
-
-      .regex-proof img {
-        display: block;
-        width: 100%;
-        height: auto;
-        cursor: zoom-in;
-        transition: opacity 0.2s;
-      }
-
-      .regex-proof img:hover {
-        opacity: 0.88;
-      }
-
-      /* ── LIGHTBOX ── */
-      .lightbox {
-        position: fixed;
-        inset: 0;
-        background: rgba(10, 14, 26, 0.75);
-        backdrop-filter: blur(14px);
-        -webkit-backdrop-filter: blur(14px);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 2rem;
-        z-index: 500;
-        opacity: 0;
-        visibility: hidden;
-        transition:
-          opacity 0.3s ease,
-          visibility 0.3s;
-        cursor: zoom-out;
-      }
-
-      .lightbox.open {
-        opacity: 1;
-        visibility: visible;
-      }
-
-      .lightbox img {
-        max-width: 95vw;
-        max-height: 90vh;
-        border-radius: 14px;
-        border: 1px solid rgba(0, 212, 255, 0.2);
-        box-shadow:
-          0 30px 80px rgba(0, 0, 0, 0.55),
-          0 0 0 1px rgba(255, 255, 255, 0.04) inset;
-        transform: scale(0.94);
-        transition: transform 0.3s ease;
-      }
-
-      .lightbox.open img {
-        transform: scale(1);
-      }
-
-      .lightbox-close {
-        position: absolute;
-        top: 1.25rem;
-        right: 1.5rem;
-        width: 42px;
-        height: 42px;
-        border-radius: 50%;
-        border: 1px solid var(--border);
-        background: rgba(17, 24, 39, 0.9);
-        color: var(--text);
-        font-size: 1.3rem;
-        font-weight: 700;
-        line-height: 1;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition:
-          border-color 0.2s,
-          color 0.2s,
-          transform 0.2s;
-      }
-
-      .lightbox-close:hover {
-        border-color: var(--accent);
-        color: var(--accent);
-        transform: rotate(90deg);
-      }
-
-      body.lb-open {
-        overflow: hidden;
-      }
-
-      /* ── SCROLL ANIMATION ── */
-      .reveal {
-        opacity: 0;
-        transform: translateY(28px);
-        transition:
-          opacity 0.6s ease,
-          transform 0.6s ease;
-      }
-      .reveal.visible {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    </style>
+    <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <!-- HERO -->
@@ -869,27 +44,68 @@
 
     <!-- NAV -->
     <nav>
-      <a href="#que-es">¿Qué es?</a>
-      <a href="#por-que">¿Por qué?</a>
-      <a href="#ventajas">Ventajas</a>
-      <a href="#caso">Caso KD</a>
-      <a href="#java">Java & Regex</a>
-      <a href="#referencias">Referencias</a>
-      <a
-        href="https://github.com/DanielGomezIH/blog-expresiones-regulares"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="nav-github"
-        aria-label="Ver repositorio en GitHub"
-        title="Ver repositorio en GitHub"
+      <div class="nav-links">
+        <a href="#que-es">¿Qué es?</a>
+        <a href="#por-que">¿Por qué?</a>
+        <a href="#ventajas">Ventajas</a>
+        <a href="#caso">Caso KD</a>
+        <a href="#java">Java & Regex</a>
+        <a href="#referencias">Referencias</a>
+        <a
+          href="https://github.com/DanielGomezIH/blog-expresiones-regulares"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="nav-github"
+          aria-label="Ver repositorio en GitHub"
+          title="Ver repositorio en GitHub"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path
+              d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.082-.73.082-.73 1.205.085 1.84 1.237 1.84 1.237 1.07 1.835 2.807 1.305 3.492.998.108-.776.42-1.305.762-1.605-2.665-.305-5.467-1.335-5.467-5.93 0-1.31.468-2.38 1.236-3.22-.124-.303-.536-1.524.117-3.176 0 0 1.008-.322 3.3 1.23A11.5 11.5 0 0 1 12 5.8c1.02.005 2.047.138 3.003.404 2.29-1.552 3.297-1.23 3.297-1.23.655 1.652.243 2.873.12 3.176.77.84 1.234 1.91 1.234 3.22 0 4.61-2.807 5.62-5.48 5.92.43.37.813 1.102.813 2.222 0 1.606-.015 2.898-.015 3.293 0 .322.216.696.825.577C20.565 21.796 24 17.298 24 12c0-6.63-5.37-12-12-12z"
+            />
+          </svg>
+        </a>
+      </div>
+      <button
+        class="nav-hamburger"
+        id="navHamburger"
+        aria-label="Abrir menú"
+        aria-expanded="false"
+        aria-controls="navSheet"
       >
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path
-            d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.082-.73.082-.73 1.205.085 1.84 1.237 1.84 1.237 1.07 1.835 2.807 1.305 3.492.998.108-.776.42-1.305.762-1.605-2.665-.305-5.467-1.335-5.467-5.93 0-1.31.468-2.38 1.236-3.22-.124-.303-.536-1.524.117-3.176 0 0 1.008-.322 3.3 1.23A11.5 11.5 0 0 1 12 5.8c1.02.005 2.047.138 3.003.404 2.29-1.552 3.297-1.23 3.297-1.23.655 1.652.243 2.873.12 3.176.77.84 1.234 1.91 1.234 3.22 0 4.61-2.807 5.62-5.48 5.92.43.37.813 1.102.813 2.222 0 1.606-.015 2.898-.015 3.293 0 .322.216.696.825.577C20.565 21.796 24 17.298 24 12c0-6.63-5.37-12-12-12z"
-          />
-        </svg>
-      </a>
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
     </nav>
+
+    <!-- MOBILE SHEET -->
+    <div class="nav-sheet-overlay" id="navOverlay" aria-hidden="true"></div>
+    <aside class="nav-sheet" id="navSheet" aria-label="Menú de navegación" aria-hidden="true">
+      <div class="nav-sheet-header">
+        <span class="nav-sheet-title">Navegación</span>
+        <button class="nav-sheet-close" id="navSheetClose" aria-label="Cerrar menú">✕</button>
+      </div>
+      <div class="nav-sheet-links">
+        <a href="#que-es">¿Qué es?</a>
+        <a href="#por-que">¿Por qué?</a>
+        <a href="#ventajas">Ventajas</a>
+        <a href="#caso">Caso KD</a>
+        <a href="#java">Java & Regex</a>
+        <a href="#referencias">Referencias</a>
+        <a
+          href="https://github.com/DanielGomezIH/blog-expresiones-regulares"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="sheet-github"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.082-.73.082-.73 1.205.085 1.84 1.237 1.84 1.237 1.07 1.835 2.807 1.305 3.492.998.108-.776.42-1.305.762-1.605-2.665-.305-5.467-1.335-5.467-5.93 0-1.31.468-2.38 1.236-3.22-.124-.303-.536-1.524.117-3.176 0 0 1.008-.322 3.3 1.23A11.5 11.5 0 0 1 12 5.8c1.02.005 2.047.138 3.003.404 2.29-1.552 3.297-1.23 3.297-1.23.655 1.652.243 2.873.12 3.176.77.84 1.234 1.91 1.234 3.22 0 4.61-2.807 5.62-5.48 5.92.43.37.813 1.102.813 2.222 0 1.606-.015 2.898-.015 3.293 0 .322.216.696.825.577C20.565 21.796 24 17.298 24 12c0-6.63-5.37-12-12-12z"/>
+          </svg>
+          Ver en GitHub
+        </a>
+      </div>
+    </aside>
 
     <!-- SECCIÓN 1: QUÉ ES -->
     <section id="que-es">
@@ -963,7 +179,7 @@ System.out.<span class="fn">println</span>(m.<span class="fn">matches</span>());
 
           <div class="card-grid">
             <div class="card">
-              <div class="card-icon">🎯</div>
+              <div class="card-icon">✅</div>
               <h3>Validación precisa</h3>
               <p>
                 Un solo patrón define exactamente qué formato es aceptable, sin
@@ -987,7 +203,7 @@ System.out.<span class="fn">println</span>(m.<span class="fn">matches</span>());
               </p>
             </div>
             <div class="card">
-              <div class="card-icon">🔧</div>
+              <div class="card-icon">🌐</div>
               <h3>Flexibilidad</h3>
               <p>
                 Se adaptan a prácticamente cualquier formato: fechas, correos,
@@ -1028,41 +244,41 @@ System.out.<span class="fn">println</span>(m.<span class="fn">matches</span>());
               </thead>
               <tbody>
                 <tr>
-                  <td>
+                  <td data-label="Ventaja">
                     <strong style="color: var(--accent)">Precisión</strong>
                   </td>
-                  <td>Define exactamente qué es válido</td>
-                  <td>
+                  <td data-label="Descripción">Define exactamente qué es válido</td>
+                  <td data-label="Ejemplo en inventario">
                     El código de producto debe iniciar con <code>KD-</code>
                   </td>
                 </tr>
                 <tr>
-                  <td>
+                  <td data-label="Ventaja">
                     <strong style="color: var(--accent)">Consistencia</strong>
                   </td>
-                  <td>Mismas reglas en toda la aplicación</td>
-                  <td>Precios siempre en formato numérico positivo</td>
+                  <td data-label="Descripción">Mismas reglas en toda la aplicación</td>
+                  <td data-label="Ejemplo en inventario">Precios siempre en formato numérico positivo</td>
                 </tr>
                 <tr>
-                  <td>
+                  <td data-label="Ventaja">
                     <strong style="color: var(--accent)">Mantenibilidad</strong>
                   </td>
-                  <td>Cambiar una regex actualiza toda la validación</td>
-                  <td>Modificar la longitud del código en un solo lugar</td>
+                  <td data-label="Descripción">Cambiar una regex actualiza toda la validación</td>
+                  <td data-label="Ejemplo en inventario">Modificar la longitud del código en un solo lugar</td>
                 </tr>
                 <tr>
-                  <td>
+                  <td data-label="Ventaja">
                     <strong style="color: var(--accent)">Legibilidad</strong>
                   </td>
-                  <td>Reemplaza bloques de if/else extensos</td>
-                  <td>Validar precio en 1 línea vs 10+ condicionales</td>
+                  <td data-label="Descripción">Reemplaza bloques de if/else extensos</td>
+                  <td data-label="Ejemplo en inventario">Validar precio en 1 línea vs 10+ condicionales</td>
                 </tr>
                 <tr>
-                  <td>
+                  <td data-label="Ventaja">
                     <strong style="color: var(--accent)">Seguridad</strong>
                   </td>
-                  <td>Previene inyecciones y datos maliciosos</td>
-                  <td>Rechazar caracteres especiales en nombres</td>
+                  <td data-label="Descripción">Previene inyecciones y datos maliciosos</td>
+                  <td data-label="Ejemplo en inventario">Rechazar caracteres especiales en nombres</td>
                 </tr>
               </tbody>
             </table>
@@ -1453,69 +669,12 @@ System.out.<span class="fn">println</span>(valido); <span class="cm">// true</sp
       </svg>
     </button>
 
-    <script>
-      // Scroll reveal
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((e) => {
-            if (e.isIntersecting) {
-              e.target.classList.add("visible");
-              observer.unobserve(e.target);
-            }
-          });
-        },
-        { threshold: 0.1 },
-      );
-
-      document
-        .querySelectorAll(".reveal")
-        .forEach((el) => observer.observe(el));
-
-      // Back to top
-      const backBtn = document.getElementById("backToTop");
-      window.addEventListener(
-        "scroll",
-        () => {
-          if (window.scrollY > 400) backBtn.classList.add("visible");
-          else backBtn.classList.remove("visible");
-        },
-        { passive: true },
-      );
-
-      backBtn.addEventListener("click", () => {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      });
-
-      // Lightbox
-      const lightbox = document.getElementById("lightbox");
-      const lightboxImg = document.getElementById("lightboxImg");
-      const lightboxClose = document.getElementById("lightboxClose");
-
-      const openLightbox = (src, alt) => {
-        lightboxImg.src = src;
-        lightboxImg.alt = alt || "";
-        lightbox.classList.add("open");
-        document.body.classList.add("lb-open");
-      };
-
-      const closeLightbox = () => {
-        lightbox.classList.remove("open");
-        document.body.classList.remove("lb-open");
-      };
-
-      document.querySelectorAll(".regex-proof img").forEach((img) => {
-        img.addEventListener("click", () => openLightbox(img.src, img.alt));
-      });
-
-      lightbox.addEventListener("click", (e) => {
-        if (e.target === lightbox || e.target === lightboxClose)
-          closeLightbox();
-      });
-
-      document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape" && lightbox.classList.contains("open"))
-          closeLightbox();
-      });
-    </script>
+    <script src="script.js"></script>
   </body>
 </html>
+
+
+
+
+
+
